@@ -12,7 +12,27 @@ def hello(request):
     return HttpResponse("<h1>Hello World</h1>")
 
 from django.views.decorators.csrf import csrf_exempt
+#function/API to signup in the system 
+@csrf_exempt
+def signupReq(request):
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    print("==========================")
+    print("received req: ", body)
+    print("==========================")
+    if request.method == "POST":
+        cur.execute("INSERT INTO `user` (`user_name`, `user_pwd`, `user_email`,`user_mobile_no`) VALUES ('{}', '{}', '{}', '{}')".format(
+            body['user_name'],
+            body['user_pwd'],
+            body['user_email'],
+            body['user_mobile_no']
+        ))
+        conn.commit()
+    return HttpResponse("<h1>Signup Successfully</h1>")
 
+
+
+#function/API to login to the system based on the user email and password
 @csrf_exempt 
 def loginReq(request):
     
@@ -61,6 +81,31 @@ def loginReq(request):
     #else:
         #return render(request, 'login/signup.html')
 
+
+#function/API to update user details
+@csrf_exempt
+def updateUserDetails(request):
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    print("==========================")
+    print("received req: ", body)
+    print("==========================")
+    if request.method == "PUT":
+        if "user_name" in body:
+            cur.execute("UPDATE `user` SET user_name = '{}' WHERE user_id = '{}'".format(body['user_name'],1))
+            conn.commit()
+        if "user_pwd" in body:
+            cur.execute("UPDATE `user` SET user_pwd = '{}' WHERE user_id = '{}'".format(body['user_pwd'],1))
+            conn.commit()
+        if "user_email" in body:
+            cur.execute("UPDATE `user` SET user_email = '{}' WHERE user_id = '{}'".format(body['user_email'],1))
+            conn.commit()
+        if "user_mobile_no" in body:
+            cur.execute("UPDATE `user` SET user_mobile_no = '{}' WHERE user_id = '{}'".format(body['user_mobile_no'],1))
+            conn.commit()
+    return HttpResponse("<h1>Details Updated Successfully</h1>")
+
+#function/API to load homepage and available trips for the same day
 @csrf_exempt
 def home(request):
     #query to load all available trips for the user on a specific day
@@ -75,6 +120,7 @@ def home(request):
     print("==========================")
     return HttpResponse(data)
 
+#function/API to add new trip to the system
 @csrf_exempt
 def addTrip(request):
     if request.method == 'POST':
@@ -100,6 +146,7 @@ def addTrip(request):
         conn.commit()
         return HttpResponse("<h1>Trip Details Added Successfully</h1>")
 
+#function/API to book a trip from the available trips
 @csrf_exempt
 def bookTrip(request):
     print("INSIDE BO")
@@ -118,3 +165,52 @@ def bookTrip(request):
         ))
         conn.commit()
         return HttpResponse("<h1>Trip Booked Successfully</h1>")
+
+#function/API to view different available trips
+@csrf_exempt
+def viewTrips(request):
+    if request.method == 'GET':
+        """ body_unicode = request.body.decode('utf-8')
+        reqBody = json.loads(body_unicode)
+        print("==========================")
+        print("received req: ", reqBody)
+        print("==========================") """
+        print("inside view ratings")
+        cur.execute("SELECT trips.trip_charges_paid, trip_details.trip_from,trip_details.trip_to, trip_details.trip_date, trip_details.trip_car_number, trip_details.trip_route_details FROM `trips` JOIN `trip_details` ON trips.trip_details_id = trip_details.trip_details_id WHERE trips.passenger_u_id = '{}'".format(1))
+        data = cur.fetchall()
+        print("data fetched: ", data)
+        return HttpResponse("<h1>Trip details Fetched Successfully</h1>")
+
+#function/API to add ratings to a trip
+@csrf_exempt
+def addRatings(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        reqBody = json.loads(body_unicode)
+        print("==========================")
+        print("received req: ", reqBody)
+        print("==========================")
+        cur.execute("INSERT INTO `ratings` (`r_given_by`, `r_given_to`, `r_for_trip`,`r_ratings`) VALUES ('{}', '{}', '{}', '{}')".format(
+            reqBody['r_given_by'],
+            reqBody['r_given_to'],
+            reqBody['r_for_trip'],
+            reqBody['r_ratings']
+        ))
+        conn.commit()
+        return HttpResponse("<h1>Trip Ratings Given Successfully</h1>")
+    
+#function/API to view ratings given to you
+@csrf_exempt
+def viewRatings(request):
+    if request.method == 'GET':
+        """ body_unicode = request.body.decode('utf-8')
+        reqBody = json.loads(body_unicode)
+        print("==========================")
+        print("received req: ", reqBody)
+        print("==========================") """
+        print("inside view ratings")
+        cur.execute("SELECT * FROM `ratings` WHERE r_given_to = '{}'".format(1))
+        data = cur.fetchall()
+        print("data fetched: ", data)
+        return HttpResponse("<h1>Trip Ratings Fetch Successfully</h1>")
+
