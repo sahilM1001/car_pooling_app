@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href='{% static "bootstrap.css"%}'>
+    
+    <title>Login Page</title>
+</head>
+<body>
+    <div class="container col-md-6">
+        <form>
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+            <label class="form-label" for="form2Example1">Email address</label>
+              <input type="email" id="email" class="form-control" />
+              
+            </div>
+          
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="form2Example2">Password</label>
+                <input type="password" id="password" class="form-control" />
+              
+            </div>
+              
+          
+            <!-- Submit button -->
+            <button type="button" class="btn btn-primary btn-block mb-4" id="loginBtn">Login</button>
+          
+            <!-- Register buttons -->
+            <div class="text-center">
+              <p>Not a member? <a href="#!">Register</a></p>
+    
+            </div>
+          </form>
+    </div>
+    <script language="JavaScript" src='{% static "jquery.js"}'></script>
+    <script type='text/javascript'>
+        console.log("script executed")
+        $(document).ready(function(){
+            console.log("jquery executed")
+            $("#loginBtn").on('click', function(){
+            console.log("inside login button clicked")
+            $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:8000/carpooling/api/login",
+                data: {
+                    'email': $("#email").val(),
+                    'password': $("#password").val()
+                },
+
+
+                })
+            })
+        })
+        
+        
+    </script>
+   
+</body>
+</html>

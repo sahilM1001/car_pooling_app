@@ -81,6 +81,10 @@ def loginReq(request):
     #else:
         #return render(request, 'login/signup.html')
 
+#view function to render login page
+@csrf_exempt
+def loginView(request):
+    return render(request,'login/login.html')
 
 #function/API to update user details
 @csrf_exempt
