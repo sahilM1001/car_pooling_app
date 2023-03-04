@@ -7,12 +7,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href='{% static "bootstrap.css"%}'>
     
-    <title>Login Page</title>
+    <title>Signup Page</title>
 </head>
 <body>
     <div class="container col-md-6">
-        <h1>Car Pooling App</h1>
+        <h1>Car Pooling App - Registration</h1>
         <form>
+            <!-- username input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="form2Example1">User Name</label>
+                  <input type="text" id="user_name" class="form-control" />
+                  
+            </div>
             <!-- Email input -->
             <div class="form-outline mb-4">
             <label class="form-label" for="form2Example1">Email address</label>
@@ -27,15 +33,17 @@
               
             </div>
               
+            <!-- username input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="form2Example1">Mobile Number</label>
+                  <input type="text" id="mob_num" class="form-control" />
+                  
+            </div>
           
             <!-- Submit button -->
-            <button type="button" class="btn btn-primary btn-block mb-4" id="loginBtn">Login</button>
+            <button type="button" class="btn btn-primary btn-block mb-4" id="signupBtn">Signup</button>
           
-            <!-- Register buttons -->
-            <div class="text-center">
-              <p>Not a member? <a href="/carpooling/view/signup">Register</a></p>
-    
-            </div>
+            
           </form>
     </div>
     <script language="JavaScript" src='{% static "jquery.js" %}'></script>
@@ -43,15 +51,17 @@
         console.log("script executed")
         $(document).ready(function(){
             console.log("jquery executed")
-            $("#loginBtn").on('click', function(){
+            $("#signupBtn").on('click', function(){
             console.log("inside login button clicked")
             let jsonData = {
-                'email': $("#email").val(),
-                'password': $("#password").val()
+                'user_name': $("#user_name").val(),
+                'user_email': $("#email").val(),
+                'user_pwd': $("#password").val(),
+                'user_mobile_no':$("#mob_num").val(),
             }
             $.ajax({
                 type: "POST",
-                url: "http://127.0.0.1:8000/carpooling/api/login",
+                url: "http://127.0.0.1:8000/carpooling/api/signup",
                 data: JSON.stringify(jsonData),
                 contentType: "application/json; charset=utf-8"
 

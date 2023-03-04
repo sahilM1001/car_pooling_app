@@ -28,7 +28,7 @@ def signupReq(request):
             body['user_mobile_no']
         ))
         conn.commit()
-    return HttpResponse("<h1>Signup Successfully</h1>")
+    return redirect("http://127.0.0.1:8000/carpooling/view/login")
 
 
 
@@ -85,6 +85,10 @@ def loginReq(request):
 @csrf_exempt
 def loginView(request):
     return render(request,'login/login.html')
+
+@csrf_exempt
+def signupView(request):
+    return render(request,'login/signup.html')
 
 #function/API to update user details
 @csrf_exempt
