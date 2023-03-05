@@ -49,9 +49,9 @@
     <script language="JavaScript" src='{% static "jquery.js" %}'></script>
     <script type='text/javascript'>
         console.log("script executed")
-        $(document).ready(function(){
-            console.log("jquery executed")
-            $("#signupBtn").on('click', function(){
+    $(document).ready(function(){
+        console.log("jquery executed")
+        $("#signupBtn").on('click', function(){
             console.log("inside login button clicked")
             let jsonData = {
                 'user_name': $("#user_name").val(),
@@ -63,12 +63,13 @@
                 type: "POST",
                 url: "http://127.0.0.1:8000/carpooling/api/signup",
                 data: JSON.stringify(jsonData),
-                contentType: "application/json; charset=utf-8"
-
-                })
+                contentType: "application/json; charset=utf-8",
+                success: function(){
+                    window.location.replace("http://127.0.0.1:8000/carpooling/view/login");
+                }
             })
         })
-        
+    })
         
     </script>
    

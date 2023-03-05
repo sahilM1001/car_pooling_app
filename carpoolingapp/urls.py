@@ -18,6 +18,6 @@ urlpatterns = [
     #view paths
     path('view/login', views.loginView, name='Login View'),#done
     path('view/signup', views.signupView, name='Signup View'),
-    #path('view/home', views.homeView, name='Home View'),#done
+    path('view/home', views.homeView, name='Home View'),#done
 
 ]

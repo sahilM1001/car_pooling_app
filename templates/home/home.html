@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href='{% static "bootstrap.css"%}'>
+    <script language="JavaScript" src='{% static "jquery.js" %}'></script>
+</head>
+<body>
+    
+    <div class="container">
+        <div id="mainContainer">
+
+        </div>
+        
+    </div>
+
+    <script type='text/javascript'>
+        console.log("script executed")
+        let receivedData;
+        $(document).ready(function(){
+        $.ajax({
+            type: "POST",
+            url: "http://127.0.0.1:8000/carpooling/api/home",
+            success: function(data){
+                console.log("data received: ", data)
+                homeScreenLister(data.data)
+                //console.log(data[2])
+            }
+        })
+        })
+
+        function homeScreenLister(receivedData){
+            let mainContainer = document.getElementById("mainContainer")
+            console.log("receivedData: ", receivedData)
+            for (let i = 0; i < receivedData.length; i++){
+                let htmlObj = `
+                <div class="row">
+                <div class="col-lg-12 mt-4">
+                    <div class="card">
+    
+                        <div class="card-body">
+                            <h5 class="card-title">${receivedData[i]['trip_from']} - ${receivedData[i]['trip_to']}</h5>
+                            <p class="card-text">
+                                <b>Trip Date and Time</b>: ${receivedData[i]['trip_date']} - ${receivedData[i]['trip_time'].split("T")[1]}
+                            </p>
+                            <p class="card-text">
+                                <b>Trip Spots Available</b>: ${receivedData[i]['trip_spots_available']}
+                            </p>
+
+                            <p class="card-text trip_charges" >
+                                <b>Trip Price</b>: ${receivedData[i]['trip_charges_per_person']}
+                            </p>
+    
+                            <button class="btn btn-outline-primary btn-sm bookTrip" id="book_trip_${receivedData[i]['trip_details_id']}" onclick=tripBooking()>
+                                Book Trip
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>`
+            var template = document.createElement('template');
+            htmlObj = htmlObj.trim(); // Never return a text node of whitespace as the result
+            template.innerHTML = htmlObj;
+
+            mainContainer.appendChild(template.content.firstChild)
+            }
+        }
+        function tripBooking(){
+            let trip_charges = $(event.target).siblings(".trip_charges").text().split(":")[1].trim()
+            let trip_id = event.target.id.split("_")[2]
+            
+            let jsonObj = {
+                'trip_charges_paid': trip_charges,
+                'trip_details_id': trip_id,
+                'trip_status': "Booked"
+            }
+            $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:8000/carpooling/api/bookTrip",
+                data: JSON.stringify(jsonObj),
+                contentType: "application/json; charset=utf-8",
+                success: function(data){
+                    //window.location.replace("http://127.0.0.1:8000/carpooling/view/login");
+                    console.log(data)
+                    console.log("Request was successful")
+                }
+            }) 
+        }
+        $(document).ready(function(){
+            $(".bookTrip").on('click', function(){
+            console.log("on btn click function")
+            let trip_id = $(this).getattr('id')
+            let jsonData = {
+                'trip_details_id': trip_id,
+                'user_email': $("#email").val(),
+                'user_pwd': $("#password").val(),
+                'user_mobile_no':$("#mob_num").val(),
+            }
+            console.log(trip_id)
+            /* */
+        })
+            
+        })
+        
+    </script>
+</body>
+</html>

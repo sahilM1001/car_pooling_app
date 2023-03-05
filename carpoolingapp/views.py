@@ -1,13 +1,16 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.shortcuts import render, redirect, reverse
+from django.http import HttpResponse, JsonResponse
 import json
+
 
 # Create your views here.
 import mysql.connector as mcdb
 conn = mcdb.connect(host="localhost", user="root", passwd="", database='car_pooling_app')
 print('Successfully connected to database')
 cur = conn.cursor()
-loggedInUser = 0
+states ={
+    'logged_in_user': 0
+}
 def hello(request):
     return HttpResponse("<h1>Hello World</h1>")
 
@@ -28,7 +31,7 @@ def signupReq(request):
             body['user_mobile_no']
         ))
         conn.commit()
-    return redirect("http://127.0.0.1:8000/carpooling/view/login")
+    return HttpResponse("<h1>Request Successful</h1>")
 
 
 
@@ -54,16 +57,18 @@ def loginReq(request):
             print("DATA IS NOT NONEEEE")
             print(data)
             loggedInUser = data[0]
-            return HttpResponse("<h1>Login Successful</h1>")
+            print("loggedInUser: ", loggedInUser)
+            states['logged_in_user'] = data[0]
+            #return HttpResponse("<h1>Login Successful</h1>")
             if len(data) > 0:
                 #Fetch Data
-                admin_db_id = data[0]
-                admin_db_email = data[1]
-                print(admin_db_id)
-                print(admin_db_email)
+                loggedInUser_id = data[0]
+                #admin_db_email = data[1]
+                #print(admin_db_id)
+                #print(admin_db_email)
                 #Session Create Code
-                request.session['admin_id'] = admin_db_id
-                request.session['admin_email'] = admin_db_email
+                request.session['user_id'] = loggedInUser_id
+                #request.session['admin_email'] = admin_db_email
                 #Session Create Code
                 #Cookie Code
                 #response = redirect(index)
@@ -71,6 +76,7 @@ def loginReq(request):
                 response.set_cookie('admin_email', admin_db_email)
                 return response """
                 #Cookie Code
+                return HttpResponse("<h1>Login Successful</h1>")
             else:
                 pass
                 #return render(request, 'login/signup.html')         
@@ -84,6 +90,8 @@ def loginReq(request):
 #view function to render login page
 @csrf_exempt
 def loginView(request):
+    print("inside the login view")
+    
     return render(request,'login/login.html')
 
 @csrf_exempt
@@ -126,7 +134,32 @@ def home(request):
     print("==========================")
     print("received response data: ", data)
     print("==========================")
-    return HttpResponse(data)
+    dataArr = []
+    for i in data:
+        temp = {
+            'trip_details_id': i[0],
+            'trip_from':i[1],
+            'trip_to': i[2],
+            'trip_date': i[3],
+            'trip_driver_id': i[4],
+            'trip_car_number': i[5],
+            'trip_total_spots': i[6],
+            'trip_charges_per_person': i[7],
+            'trip_spots_available': i[8],
+            'trip_time': i[9],
+            'trip_route_details': i[10]
+        }
+        dataArr.append(temp)
+    returnDic = {
+        'data': dataArr
+    }
+    return JsonResponse(returnDic)
+
+@csrf_exempt
+def homeView(request):
+    print("Homepage view called")
+    return render(request, 'home/home.html')
+    
 
 #function/API to add new trip to the system
 @csrf_exempt
@@ -137,8 +170,7 @@ def addTrip(request):
         print("==========================")
         print("received req: ", reqBody)
         print("==========================")
-        cur.execute("INSERT INTO `trip_details` (`trip_details_id`, `trip_from`, `trip_to`, `trip_date`, `trip_driver_id`, `trip_car_number`, `trip_total_spots`, `trip_charges_per_person`, `trip_spots_available`, `trip_time`, `trip_route_details`) VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(
-            2,
+        cur.execute("INSERT INTO `trip_details` (`trip_from`, `trip_to`, `trip_date`, `trip_driver_id`, `trip_car_number`, `trip_total_spots`, `trip_charges_per_person`, `trip_spots_available`, `trip_time`, `trip_route_details`) VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(
             reqBody['trip_from'],
             reqBody['trip_to'],
             reqBody['trip_date'],
@@ -158,15 +190,18 @@ def addTrip(request):
 @csrf_exempt
 def bookTrip(request):
     print("INSIDE BO")
+    print("request session: ", request.session)
+    print("request session user_id: ", )
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         reqBody = json.loads(body_unicode)
         print("==========================")
         print("received req: ", reqBody)
         print("==========================")
-        cur.execute("INSERT INTO `trips` (`trip_id`, `passenger_u_id`, `trip_charges_paid`, `trip_status`,`trip_details_id`) VALUES ('{}','{}', '{}', '{}', '{}')".format(
-            reqBody['trip_id'],
-            reqBody['passenger_u_id'],
+        #print("logged in user: ", states)
+        
+        cur.execute("INSERT INTO `trips` (`passenger_u_id`, `trip_charges_paid`, `trip_status`,`trip_details_id`) VALUES ('{}', '{}', '{}', '{}')".format(
+            request.session['user_id'],
             reqBody['trip_charges_paid'],
             reqBody['trip_status'],
             reqBody['trip_details_id']
