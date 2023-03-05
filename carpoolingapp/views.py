@@ -174,7 +174,7 @@ def addTrip(request):
             reqBody['trip_from'],
             reqBody['trip_to'],
             reqBody['trip_date'],
-            1,
+            request.session['user_id'],
             reqBody['trip_car_number'],
             reqBody['trip_total_spots'],
             reqBody['trip_charges_per_person'],
@@ -186,6 +186,10 @@ def addTrip(request):
         conn.commit()
         return HttpResponse("<h1>Trip Details Added Successfully</h1>")
 
+@csrf_exempt
+def addTripView(request):
+    print("add trip view called")
+    return render(request, 'home/addTrip.html')
 #function/API to book a trip from the available trips
 @csrf_exempt
 def bookTrip(request):
@@ -206,6 +210,7 @@ def bookTrip(request):
             reqBody['trip_status'],
             reqBody['trip_details_id']
         ))
+        cur.execute("UPDATE `trip_details` SET `trip_spots_available` = `trip_spots_available` - 1 WHERE `trip_details_id` = {} AND `trip_spots_available` > 0".format(reqBody['trip_details_id']))
         conn.commit()
         return HttpResponse("<h1>Trip Booked Successfully</h1>")
 
@@ -223,6 +228,9 @@ def viewTrips(request):
         data = cur.fetchall()
         print("data fetched: ", data)
         return HttpResponse("<h1>Trip details Fetched Successfully</h1>")
+
+def viewTripView(request):
+    pass
 
 #function/API to add ratings to a trip
 @csrf_exempt

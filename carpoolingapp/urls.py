@@ -17,7 +17,9 @@ urlpatterns = [
     
     #view paths
     path('view/login', views.loginView, name='Login View'),#done
-    path('view/signup', views.signupView, name='Signup View'),
+    path('view/signup', views.signupView, name='Signup View'),#done
     path('view/home', views.homeView, name='Home View'),#done
+    path('view/addTrip', views.addTripView, name='Add Trip View'),#done
+    path('view/viewTrips', views.viewTripView, name='View Trips View'),#done
 
 ]
