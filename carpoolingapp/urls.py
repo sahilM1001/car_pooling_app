@@ -14,6 +14,7 @@ urlpatterns = [
     path('api/viewRatings', views.viewRatings, name='View Ratings'),#done
     path('api/updateDetails', views.updateUserDetails, name='Update User Details'),#done
     path('api/viewTrips', views.viewTrips, name='View Trips'),#done
+    path('api/logout', views.logoutReq, name='Logout Trips'),#done
     
     #view paths
     path('view/login', views.loginView, name='Login View'),#done

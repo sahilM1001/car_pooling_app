@@ -305,3 +305,12 @@ def cancelTrip(request):
         conn.commit()
         #pass
         return HttpResponse("<h1>Trip Canceled</h1>")
+
+@csrf_exempt
+def logoutReq(request):
+    print()
+    user_id = request.session['user_id']
+    #del request.session[user_id]
+    return redirect("/carpooling/view/login")
+    return HttpResponse("<h1>Logout Successful</h1>")
+    pass
