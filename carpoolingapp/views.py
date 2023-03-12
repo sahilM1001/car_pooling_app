@@ -289,3 +289,19 @@ def viewRatings(request):
         print("data fetched: ", data)
         return HttpResponse("<h1>Trip Ratings Fetch Successfully</h1>")
 
+
+#function to cancel trip
+@csrf_exempt
+def cancelTrip(request):
+    if request.method == "POST":
+        body_unicode = request.body.decode('utf-8')
+        reqBody = json.loads(body_unicode)
+        print("==========================")
+        print("received req: ", reqBody)
+        print("==========================")
+
+        cur.execute("UPDATE `trip_details` SET `trip_spots_available` = `trip_spots_available` + 1 WHERE `trip_details_id` = {} ".format(reqBody['trip_details_id']))
+        cur.execute("UPDATE `trips` SET `trip_status` = 'Cancelled' WHERE `trip_id` = {} ".format(reqBody['trip_id']))
+        conn.commit()
+        #pass
+        return HttpResponse("<h1>Trip Canceled</h1>")

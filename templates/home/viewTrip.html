@@ -12,8 +12,21 @@
     
 </head>
 <body>
-    <h1>View Trips page</h1>
+    
     <div class="container-fluid">
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="/carpooling/view/home">Car Pooling App</a>
+            
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+              <div class="navbar-nav">
+                <a class="nav-item nav-link" href="/carpooling/view/home">Home</a>
+                <a class="nav-item nav-link" href="/carpooling/view/addTrip">Add a New Trip</a>
+                <a class="nav-item nav-link active" href="/carpooling/view/viewTrips">View Trips</a>
+                <a class="nav-item nav-link" href="/carpooling/view/myProfile">View profile</a>
+              </div>
+            </div>
+          </nav>
 
         <div id="mainContainer">
             
@@ -91,7 +104,7 @@
                                 <b>Trip Charges To Be Paid</b>: ${receivedData[i]['trip_charges_paid']}
                             </p>
     
-                            <button class="btn btn-outline-primary btn-sm cancelTrip" id="cancel_trip_${receivedData[i]['trip_details_id']}" onclick=cancelTrip()>
+                            <button class="btn btn-outline-primary btn-sm cancelTrip" id="cancel_trip_${receivedData[i]['trip_details_id']}" data-trip-id="${receivedData[i]['trip_id']}">
                                 Cancel Trip
                             </button>
                             <button class="btn btn-outline-primary btn-sm rateTrip" id="rate_trip_${receivedData[i]['trip_details_id']}" data-driver-id="${receivedData[i]['trip_driver_id']}">
@@ -108,25 +121,29 @@
             mainContainer.appendChild(template.content.firstChild)
             }
 
-            function cancelTrip(){
+            $(".cancelTrip").on('click', function(){
+                console.log("cancel trip called")
+                let trip_details_id = event.target.id.split("_")[2]
+                console.log(trip_details_id)
+                let dataDict = $(event.target).data()
+                console.log(dataDict)
+                cancelTrip(trip_details_id, dataDict['tripId'])
+
+            })
+
+            function cancelTrip(trip_details_id, trip_id){
+                let jsonObj = {
+                    'trip_details_id': trip_details_id,
+                    'trip_id': trip_id
+                }
                 $.ajax({
                 type: "POST",
                 url: "http://127.0.0.1:8000/carpooling/api/cancelTrip",
                 data: JSON.stringify(jsonObj),
                 contentType: "application/json; charset=utf-8",
                 success: function(data){
-                    //window.location.replace("http://127.0.0.1:8000/carpooling/view/login");
-                    console.log(data)
-                    console.log("Request was successful")
-                    $.ajax({
-                        type: "POST",
-                        url: "http://127.0.0.1:8000/carpooling/api/home",
-                        success: function(data){
-                            console.log("data received: ", data)
-                            homeScreenLister(data.data)
-                            //console.log(data[2])
-                        }
-                    })
+                    window.location.replace("http://127.0.0.1:8000/carpooling/view/home");
+                    
                 }
                 })
             }
@@ -143,14 +160,15 @@
 
                 //logged_in_user
 
-                let jsonObj = {
+                
+                $(".submitRatings").on('click', function(){
+                    let jsonObj = {
                     'r_for_trip': trip_details_id,
-                    'r_ratings': $("#trip_ratings").val(),
+                    'r_ratings': parseInt($("#trip_ratings").val()),
                     'r_given_by': logged_in_user,
                     'r_given_to': dataDict['driverId']
                 }
-                
-                $(".submitRatings").on('click', function(){
+                //console.log(jsonObj)
                     addRating(jsonObj)
                 })
             })

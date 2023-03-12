@@ -10,8 +10,20 @@
     <script language="JavaScript" src='{% static "jquery.js" %}'></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Car Pooling App - Add Trip</h1>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="/carpooling/view/home">Car Pooling App</a>
+            
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+              <div class="navbar-nav">
+                <a class="nav-item nav-link" href="/carpooling/view/home">Home</a>
+                <a class="nav-item nav-link active" href="/carpooling/view/addTrip">Add a New Trip</a>
+                <a class="nav-item nav-link" href="/carpooling/view/viewTrips">View Trips</a>
+                <a class="nav-item nav-link" href="/carpooling/view/myProfile">View profile</a>
+              </div>
+            </div>
+          </nav>
+        
         <form>
             <div class="row">
                 <!-- trip from input -->
