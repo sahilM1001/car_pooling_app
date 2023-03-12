@@ -310,7 +310,41 @@ def cancelTrip(request):
 def logoutReq(request):
     print()
     user_id = request.session['user_id']
-    #del request.session[user_id]
+    print("request.session: ", request.session)
+    print("request session user_id: ", request.session['user_id'])
+    del request.session['user_id']
+    request.session.modified = True
     return redirect("/carpooling/view/login")
-    return HttpResponse("<h1>Logout Successful</h1>")
-    pass
+
+#function to render my Profile Page
+@csrf_exempt
+def myProfileView(request):
+    return render(request, "home/myProfile.html")
+
+#API function for my profile page
+@csrf_exempt
+def myProfile(request):
+    uid = request.session['user_id']
+    if request.method == "GET":
+        cur.execute("SELECT user_id, user_name, user_email, user_mobile_no FROM `user` WHERE user_id = '{}'".format(uid))
+        uData = cur.fetchone()
+        returnDict = {
+            'uData': uData
+        } 
+
+        cur.execute("SELECT COUNT(*) FROM `trip_details` WHERE trip_driver_id = '{}'".format(uid))
+        trip_details_count = cur.fetchall()
+        returnDict['trip_details_count'] = trip_details_count
+
+        cur.execute("SELECT * FROM `trip_details` WHERE trip_driver_id = '{}' ORDER BY trip_date DESC LIMIT 5".format(uid))
+        trip_details = cur.fetchall()
+        returnDict['last_five_trips'] = trip_details
+
+        print("return dict: ", returnDict)
+
+        cur.execute("SELECT AVG(r_ratings) FROM `ratings` WHERE r_given_to = {}".format(int(uid)))
+        avg_ratings = cur.fetchall()
+        returnDict['avg_ratings'] = avg_ratings
+
+        print("return dict: ", returnDict)
+        return JsonResponse(returnDict)

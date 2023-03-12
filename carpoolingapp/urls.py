@@ -15,6 +15,8 @@ urlpatterns = [
     path('api/updateDetails', views.updateUserDetails, name='Update User Details'),#done
     path('api/viewTrips', views.viewTrips, name='View Trips'),#done
     path('api/logout', views.logoutReq, name='Logout Trips'),#done
+    path('api/myProfile', views.myProfile, name='My Profile'),#done
+    
     
     #view paths
     path('view/login', views.loginView, name='Login View'),#done
@@ -22,5 +24,6 @@ urlpatterns = [
     path('view/home', views.homeView, name='Home View'),#done
     path('view/addTrip', views.addTripView, name='Add Trip View'),#done
     path('view/viewTrips', views.viewTripView, name='View Trips View'),#done
+    path('view/myProfile', views.myProfileView, name='My Profile View'),#done
 
 ]
