@@ -223,14 +223,38 @@ def viewTrips(request):
         print("==========================")
         print("received req: ", reqBody)
         print("==========================") """
-        print("inside view ratings")
-        cur.execute("SELECT trips.trip_charges_paid, trip_details.trip_from,trip_details.trip_to, trip_details.trip_date, trip_details.trip_car_number, trip_details.trip_route_details FROM `trips` JOIN `trip_details` ON trips.trip_details_id = trip_details.trip_details_id WHERE trips.passenger_u_id = '{}'".format(1))
+        print("inside view trips")
+        import datetime   
+        dt = datetime.datetime.now()
+        cur.execute("SELECT trips.trip_id, trips.trip_charges_paid, trips.trip_status, trips.trip_details_id, trip_details.trip_from,trip_details.trip_to, trip_details.trip_date, trip_details.trip_car_number, trip_details.trip_route_details, trip_details.trip_time, trip_details.trip_driver_id FROM `trips` JOIN `trip_details` ON trips.trip_details_id = trip_details.trip_details_id WHERE trips.passenger_u_id = '{}' AND trip_details.trip_date = '{}'".format(request.session['user_id'],str(dt).split(" ")[0]))
         data = cur.fetchall()
         print("data fetched: ", data)
-        return HttpResponse("<h1>Trip details Fetched Successfully</h1>")
+        #[(3, 100, 'Booked', 1, 'Juhapura', 'CG Road', datetime.date(2023, 3, 5), 'GJ01RN5249', 'Through Paldi')]
+        dataArr = []
+        for i in data:
+            temp = {
+                'trip_id': i[0],
+                'trip_charges_paid':i[1],
+                'trip_status': i[2],
+                'trip_details_id': i[3],
+                'trip_from': i[4],
+                'trip_to': i[5],
+                'trip_date': i[6],
+                'trip_car_number': i[7],
+                'trip_route_details': i[8],
+                'trip_time': i[9],
+                'trip_driver_id': i[10]
+                
+            }
+            dataArr.append(temp)
+        returnDic = {
+            'data': dataArr,
+            'logged_in_user': request.session['user_id']
+        }
+        return JsonResponse(returnDic)
 
 def viewTripView(request):
-    pass
+    return render(request, 'home/viewTrip.html')
 
 #function/API to add ratings to a trip
 @csrf_exempt

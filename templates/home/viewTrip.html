@@ -1,0 +1,172 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Trips Page</title>
+    <link rel="stylesheet" href='{% static "bootstrap.css"%}'>
+    <script language="JavaScript" src='{% static "jquery.js" %}'></script>
+    
+    
+</head>
+<body>
+    <h1>View Trips page</h1>
+    <div class="container-fluid">
+
+        <div id="mainContainer">
+            
+
+        </div>
+        <!-- Add Trip Rating Modal -->
+        <div class="modal fade" id="addTripModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Add Ratings</h5>
+                  <button type="button" class="btn close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <!-- trip total Spots -->
+                        <div class="form-outline mb-4 col-md-12">
+                            <label class="form-label" for="form2Example1">Rate your Experience from 1 to 5</label>
+                            <input type="number" id="trip_ratings" max="5" min="1" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary submitRatings">Submit Ratings</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+    </div>
+
+    
+    <script language="JavaScript" src='{% static "bootstrap.js" %}'></script>
+    <script type='text/javascript'>
+        console.log("script executed")
+        let receivedData;
+        let logged_in_user = -1
+        $(document).ready(function(){
+            
+                $.ajax({
+                    type: "GET",
+                    url: "http://127.0.0.1:8000/carpooling/api/viewTrips",
+                    success: function(data){
+                        console.log("data received: ", data)
+                        logged_in_user = data.logged_in_user
+                        homeScreenLister(data.data)
+                        //console.log(data[2])
+                    }
+                })
+        })
+
+        function homeScreenLister(receivedData){
+            let mainContainer = document.getElementById("mainContainer")
+            $("#mainContainer").empty()
+            console.log("receivedData: ", receivedData)
+            for (let i = 0; i < receivedData.length; i++){
+                let htmlObj = `
+                <div class="row">
+                <div class="col-lg-12 mt-4">
+                    <div class="card">
+    
+                        <div class="card-body">
+                            <h5 class="card-title">${receivedData[i]['trip_from']} - ${receivedData[i]['trip_to']}</h5>
+                            <p class="card-text">
+                                <b>Trip Date and Time</b>: ${receivedData[i]['trip_date']} - ${receivedData[i]['trip_time'].split("T")[1]}
+                            </p>
+                            <p class="card-text">
+                                <b>Trip Status</b>: ${receivedData[i]['trip_status']}
+                            </p>
+
+                            <p class="card-text trip_charges" >
+                                <b>Trip Charges To Be Paid</b>: ${receivedData[i]['trip_charges_paid']}
+                            </p>
+    
+                            <button class="btn btn-outline-primary btn-sm cancelTrip" id="cancel_trip_${receivedData[i]['trip_details_id']}" onclick=cancelTrip()>
+                                Cancel Trip
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm rateTrip" id="rate_trip_${receivedData[i]['trip_details_id']}" data-driver-id="${receivedData[i]['trip_driver_id']}">
+                                Rate Trip
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>`
+            var template = document.createElement('template');
+            htmlObj = htmlObj.trim(); // Never return a text node of whitespace as the result
+            template.innerHTML = htmlObj;
+
+            mainContainer.appendChild(template.content.firstChild)
+            }
+
+            function cancelTrip(){
+                $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:8000/carpooling/api/cancelTrip",
+                data: JSON.stringify(jsonObj),
+                contentType: "application/json; charset=utf-8",
+                success: function(data){
+                    //window.location.replace("http://127.0.0.1:8000/carpooling/view/login");
+                    console.log(data)
+                    console.log("Request was successful")
+                    $.ajax({
+                        type: "POST",
+                        url: "http://127.0.0.1:8000/carpooling/api/home",
+                        success: function(data){
+                            console.log("data received: ", data)
+                            homeScreenLister(data.data)
+                            //console.log(data[2])
+                        }
+                    })
+                }
+                })
+            }
+
+            $(".rateTrip").on('click', function(){
+                console.log("rate trip called")
+                $("#addTripModal").modal('show')
+
+                let trip_details_id = event.target.id.split("_")[2]
+                console.log()
+                let dataDict = $(event.target).data()
+
+                console.log("trip details id: ", trip_details_id)
+
+                //logged_in_user
+
+                let jsonObj = {
+                    'r_for_trip': trip_details_id,
+                    'r_ratings': $("#trip_ratings").val(),
+                    'r_given_by': logged_in_user,
+                    'r_given_to': dataDict['driverId']
+                }
+                
+                $(".submitRatings").on('click', function(){
+                    addRating(jsonObj)
+                })
+            })
+            
+            function addRating(jsonData){
+                $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:8000/carpooling/api/rateTrip",
+                data: JSON.stringify(jsonData),
+                contentType: "application/json; charset=utf-8",
+                success: function(){
+                    window.location.replace("http://127.0.0.1:8000/carpooling/view/home");
+                }
+            })
+            }
+        }
+    </script>
+</body>
+</html>
