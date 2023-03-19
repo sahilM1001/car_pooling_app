@@ -3,13 +3,13 @@ from . import views
 
 urlpatterns = [
     #api paths 
-    path('',views.hello, name='Hello Page'),#done
+    path('',views.loginView, name='Hello Page'),#done
     path('api/home', views.home, name='Home Page'),#done
     path('api/login', views.loginReq, name='Login Request'),#done
     path('api/signup', views.signupReq, name='Signup Request'),#done
     path('api/bookTrip', views.bookTrip, name='Trip Booking'),#done
     path('api/addTrip', views.addTrip, name='Add Trip'),#done
-    path('api/cancelTrip', views.cancelTrip, name='Cancel Trip'),
+    path('api/cancelTrip', views.cancelTrip, name='Cancel Trip'),#done
     path('api/rateTrip', views.addRatings, name='Rate Trip'),#done
     path('api/viewRatings', views.viewRatings, name='View Ratings'),#done
     path('api/updateDetails', views.updateUserDetails, name='Update User Details'),#done

@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile</title>
     <link rel="stylesheet" href='{% static "bootstrap.css"%}'>
+    <link rel="stylesheet" href='{% static "index.css"%}'>
     <script language="JavaScript" src='{% static "jquery.js" %}'></script>
     
 </head>
@@ -28,8 +29,8 @@
 
           <div id="mainContainer">
 
-            <div class="row">
-                <div class="col-md-6">
+            <div class="row mt-4">
+                <div class="col-md-6 cardDiv">
                     <div class="row">
                         <p class="col-md-3"><b>User Name:</b></p>
                         <p class="col-md-3" id="uName"></p>
@@ -45,7 +46,8 @@
                         <p class="col-md-3" id="uMob"></p>
                     </div>
                 </div>
-                <div class="col-md-6">
+                
+                <div class="col-md-6 cardDiv ml-5">
                     <div class="row">
                         <p class="col-md-3"><b>Total Trips:</b></p>
                         <p class="col-md-3" id="totalTrips"></p>
@@ -56,11 +58,12 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-            <div class="col-md-12">
+            <div class="row mt-4">
+            <div class="col-md-12 cardDiv">
                 <table class="table table-hover">
                     <thead>
                       <tr>
+                        <th scope="col">Sr No.</th>
                         <th scope="col">Trip From</th>
                         <th scope="col">Trip To</th>
                         <th scope="col">Trip Date</th>
@@ -130,6 +133,7 @@
             for (let i = 0; i < trips.length; i++){
                 let htmlObj = `
                 <tr>
+                    <td ><b>${i+1}</b></th>
                     <td >${trips[i][1]}</th>
                     <td >${trips[i][2]}</th>
                     <td >${trips[i][3]}</th>
