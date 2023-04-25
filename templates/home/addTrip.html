@@ -21,75 +21,82 @@
                 <a class="nav-item nav-link active" href="/carpooling/view/addTrip">Add a New Trip</a>
                 <a class="nav-item nav-link" href="/carpooling/view/viewTrips">View Trips</a>
                 <a class="nav-item nav-link" href="/carpooling/view/myProfile">View profile</a>
+                <a class="nav-item nav-link" href="/carpooling/view/updateProfile">Update profile</a>
                 <a class="nav-item nav-link" href="/carpooling/api/logout">Logout</a>
               </div>
             </div>
           </nav>
         
-        <form>
-            <div class="row">
-                <!-- trip from input -->
-                <div class="form-outline mb-4 col-md-6">
-                    <label class="form-label" for="form2Example1">Trip from</label>
-                    <input type="text" id="trip_from" class="form-control" />
+          <div class="d-flex justify-content-center">
+            <form class="col-md-10 mt-2">
+                <div class="row">
+                    <h1>Add A Trip </h1>
+                </div>
+                <div class="row">
+                    <!-- trip from input -->
+                    <div class="form-outline mb-4 col-md-6">
+                        <label class="form-label" for="form2Example1">Trip from</label>
+                        <input type="text" id="trip_from" class="form-control" />
+                        
+                    </div>
+                    <!-- Trip to -->
+                    <div class="form-outline mb-4 col-md-6">
+                        <label class="form-label" for="form2Example1">Trip To</label>
+                        <input type="text" id="trip_to" class="form-control" />   
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <!-- trip date -->
+                    <div class="form-outline mb-4 col-md-6">
+                        <label class="form-label" for="form2Example2">Trip Date</label>
+                        <input type="date" id="trip_date" class="form-control" />
                     
+                    </div>
+                    <!-- trip Time -->
+                    <div class="form-outline mb-4 col-md-6">
+                        <label class="form-label" for="form2Example2">Trip Time</label>
+                        <input type="datetime-local" id="trip_time" class="form-control" />
+                    
+                    </div>
                 </div>
-                <!-- Trip to -->
-                <div class="form-outline mb-4 col-md-6">
-                    <label class="form-label" for="form2Example1">Trip To</label>
-                    <input type="text" id="trip_to" class="form-control" />   
-                </div>
-            </div>
-            
-            <div class="row">
-                <!-- trip date -->
-                <div class="form-outline mb-4 col-md-6">
-                    <label class="form-label" for="form2Example2">Trip Date</label>
-                    <input type="date" id="trip_date" class="form-control" />
-                
-                </div>
-                <!-- trip Time -->
-                <div class="form-outline mb-4 col-md-6">
-                    <label class="form-label" for="form2Example2">Trip Time</label>
-                    <input type="datetime-local" id="trip_time" class="form-control" />
-                
-                </div>
-            </div>
-          
-            
               
-            <!-- trip car number -->
-            <div class="form-outline mb-4">
-                <label class="form-label" for="form2Example1">Trip Car Number</label>
-                  <input type="text" id="trip_car_number" class="form-control" />
+                
                   
-            </div>
-
-            <div class="row">
-                <!-- trip total Spots -->
-                <div class="form-outline mb-4 col-md-6">
-                    <label class="form-label" for="form2Example1">Trip Total Spots</label>
-                    <input type="number" id="trip_total_spots" class="form-control" />
-                </div>
-
-                <!-- trip charges per person -->
-                <div class="form-outline mb-4 col-md-6">
-                    <label class="form-label" for="form2Example1">Trip Charges Per Person</label>
-                    <input type="number" id="trip_charges_per_person" class="form-control" />
-                </div>
-            </div>
-            
-            <div class="row">
+                <!-- trip car number -->
                 <div class="form-outline mb-4">
-                    <label class="form-label" for="form2Example1">Trip Route Details</label>
-                    <input type="text" id="trip_route_details" class="form-control" />
+                    <label class="form-label" for="form2Example1">Trip Car Number</label>
+                      <input type="text" id="trip_car_number" class="form-control" />
+                      
                 </div>
-
-            </div>
-            <!-- Submit button -->
-            <button type="button" class="btn btn-primary btn-block mb-4" id="addTripBtn">Add Trip</button>
-          
-          </form>
+    
+                <div class="row">
+                    <!-- trip total Spots -->
+                    <div class="form-outline mb-4 col-md-6">
+                        <label class="form-label" for="form2Example1">Trip Total Spots</label>
+                        <input type="number" id="trip_total_spots" class="form-control" />
+                    </div>
+    
+                    <!-- trip charges per person -->
+                    <div class="form-outline mb-4 col-md-6">
+                        <label class="form-label" for="form2Example1">Trip Charges Per Person</label>
+                        <input type="number" id="trip_charges_per_person" class="form-control" />
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form2Example1">Trip Route Details</label>
+                        <input type="text" id="trip_route_details" class="form-control" />
+                    </div>
+    
+                </div>
+                <!-- Submit button -->
+                <button type="button" class="btn btn-primary btn-block mb-4" id="addTripBtn">Add Trip</button>
+              
+              </form>
+          </div>
+        
     </div>
         
     <script>

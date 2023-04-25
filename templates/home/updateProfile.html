@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <link rel="stylesheet" href='{% static "bootstrap.css"%}'>
+    <link rel="stylesheet" href='{% static "index.css"%}'>
+    <script language="JavaScript" src='{% static "jquery.js" %}'></script>
+    
+</head>
+<body>
+    <div class="container-fluid col-md-12">
+        
+
+        
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand" href="/carpooling/view/home">Car Pooling App</a>
+                
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="/carpooling/view/home">Home</a>
+                    <a class="nav-item nav-link" href="/carpooling/view/addTrip">Add a New Trip</a>
+                    <a class="nav-item nav-link" href="/carpooling/view/viewTrips">View Trips</a>
+                    <a class="nav-item nav-link" href="/carpooling/view/myProfile">View profile</a>
+                    <a class="nav-item nav-link active" href="/carpooling/view/updateProfile">Update profile</a>
+                    <a class="nav-item nav-link" href="/carpooling/api/logout">Logout</a>
+                </div>
+                </div>
+            </nav>
+
+            <div class="d-flex justify-content-center">
+                <form class="col-md-10 mt-2">
+                    <div class="row">
+                        <h1>Update Profile Details </h1>
+                    </div>
+                    <div class="row">
+                        <!-- trip from input -->
+                        <div class="form-outline mb-4 col-md-6">
+                            <label class="form-label" for="form2Example1">User Name</label>
+                            <input type="text" id="user_name" class="form-control" />
+                            
+                        </div>
+                        <!-- Trip to -->
+                        <div class="form-outline mb-4 col-md-6">
+                            <label class="form-label" for="form2Example1">User Password</label>
+                            <input type="password" id="user_pwd" class="form-control" />   
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- trip date -->
+                        <div class="form-outline mb-4 col-md-6">
+                            <label class="form-label" for="form2Example2">User Email</label>
+                            <input type="email" id="user_email" class="form-control" />
+                        
+                        </div>
+                        <!-- trip Time -->
+                        <div class="form-outline mb-4 col-md-6">
+                            <label class="form-label" for="form2Example2">User Mobile Number</label>
+                            <input type="text" id="user_mob" class="form-control" />
+                        
+                        </div>
+                    </div>
+
+                    <!-- Submit button -->
+                    <button type="button" class="btn btn-primary btn-block mb-4" id="updateBtn">Update Details</button>
+                  
+                  </form>
+              </div>
+        
+    </div>
+
+    <script type='text/javascript'>
+        console.log("script executed")
+        let receivedData;
+        let userData;
+        $(document).ready(function(){
+            
+                $.ajax({
+                    type: "GET",
+                    url: "http://127.0.0.1:8000/carpooling/api/userDetails",
+                    success: function(data){
+                        console.log("data received: ", data)
+                        userData = data
+                        
+                        //logged_in_user = data.logged_in_user
+                        //homeScreenLister(data.data)
+                        //console.log(data[2])
+                        console.log(userData)
+                        
+                        populateForm(userData)
+                    }
+                })
+        })
+
+        $("#updateBtn").on('click', function(){
+            let body = {}
+            if($("#user_name").val() != userData['user_name']){
+                body['user_name']= $("#user_name").val()
+            }
+            if($("#user_pwd").val() != userData['user_pwd']){
+                body['user_pwd']= $("#user_pwd").val()
+            }
+            if($("#user_email").val() != userData['user_email']){
+                body['user_email']= $("#user_email").val()
+            }
+            if($("#user_mob").val() != userData['user_mob']){
+                body['user_mobile_no']= $("#user_mob").val()
+            }
+
+            $.ajax({
+                type: "PUT",
+                url: "http://127.0.0.1:8000/carpooling/api/userDetails",
+                data: JSON.stringify(body),
+                contentType: "application/json; charset=utf-8",
+                success: function(){
+                    window.location.replace("http://127.0.0.1:8000/carpooling/view/myProfile");
+                }
+            })
+        })
+        
+        function populateForm(userData){
+            $("#user_name").val(userData['user_name'])
+            $("#user_pwd").val(userData['user_pwd'])
+            $("#user_email").val(userData['user_email'])
+            $("#user_mob").val(userData['user_mob'])
+
+        }
+    </script>
+
+</body>
+</html>

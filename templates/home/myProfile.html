@@ -13,72 +13,77 @@
 </head>
 <body>
     <div class="container-fluid col-md-12">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="/carpooling/view/home">Car Pooling App</a>
-            
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-              <div class="navbar-nav">
-                <a class="nav-item nav-link" href="/carpooling/view/home">Home</a>
-                <a class="nav-item nav-link" href="/carpooling/view/addTrip">Add a New Trip</a>
-                <a class="nav-item nav-link" href="/carpooling/view/viewTrips">View Trips</a>
-                <a class="nav-item nav-link active" href="/carpooling/view/myProfile">View profile</a>
-                <a class="nav-item nav-link" href="/carpooling/api/logout">Logout</a>
-              </div>
-            </div>
-          </nav>
+        
 
-          <div id="mainContainer">
-
-            <div class="row mt-4">
-                <div class="col-md-6 cardDiv">
-                    <div class="row">
-                        <p class="col-md-3"><b>User Name:</b></p>
-                        <p class="col-md-3" id="uName"></p>
-                    </div>
-
-                    <div class="row">
-                        <p class="col-md-3"><b>User Email:</b></p>
-                        <p class="col-md-3" id="uEmail"></p>
-                    </div>
-
-                    <div class="row">
-                        <p class="col-md-3"><b>User Mobile Number:</b></p>
-                        <p class="col-md-3" id="uMob"></p>
-                    </div>
-                </div>
+        
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand" href="/carpooling/view/home">Car Pooling App</a>
                 
-                <div class="col-md-6 cardDiv ml-5">
-                    <div class="row">
-                        <p class="col-md-3"><b>Total Trips:</b></p>
-                        <p class="col-md-3" id="totalTrips"></p>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="/carpooling/view/home">Home</a>
+                    <a class="nav-item nav-link" href="/carpooling/view/addTrip">Add a New Trip</a>
+                    <a class="nav-item nav-link" href="/carpooling/view/viewTrips">View Trips</a>
+                    <a class="nav-item nav-link active" href="/carpooling/view/myProfile">View profile</a>
+                    <a class="nav-item nav-link" href="/carpooling/view/updateProfile">Update profile</a>
+                    <a class="nav-item nav-link" href="/carpooling/api/logout">Logout</a>
+                </div>
+                </div>
+            </nav>
+
+            <div id="mainContainer">
+
+                <div class="row mt-4">
+                    <div class="col-md-6 cardDiv">
+                        <div class="row">
+                            <p class="col-md-3"><b>User Name:</b></p>
+                            <p class="col-md-3" id="uName"></p>
+                        </div>
+
+                        <div class="row">
+                            <p class="col-md-3"><b>User Email:</b></p>
+                            <p class="col-md-3" id="uEmail"></p>
+                        </div>
+
+                        <div class="row">
+                            <p class="col-md-3"><b>User Mobile Number:</b></p>
+                            <p class="col-md-3" id="uMob"></p>
+                        </div>
                     </div>
-                    <div class="row">
-                        <p class="col-md-3"><b>Average Ratings:</b></p>
-                        <p class="col-md-3" id="avgRatings"></p>
+                    
+                    <div class="col-md-6 cardDiv ml-5">
+                        <div class="row">
+                            <p class="col-md-3"><b>Total Trips:</b></p>
+                            <p class="col-md-3" id="totalTrips"></p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-3"><b>Average Ratings:</b></p>
+                            <p class="col-md-3" id="avgRatings"></p>
+                        </div>
                     </div>
                 </div>
+                <div class="row mt-4">
+                <div class="col-md-12 cardDiv">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">Sr No.</th>
+                            <th scope="col">Trip From</th>
+                            <th scope="col">Trip To</th>
+                            <th scope="col">Trip Date</th>
+                            <th scope="col">Car Number</th>
+                            <th scope="col">Trip Total Spots</th>
+                            <th scope="col">Trip Charges Per Spot</th>
+                            <th scope="col">Route Details</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tripTbody">
+                        </tbody>
+                    </table>
+                </div>
+                </div>
             </div>
-            <div class="row mt-4">
-            <div class="col-md-12 cardDiv">
-                <table class="table table-hover">
-                    <thead>
-                      <tr>
-                        <th scope="col">Sr No.</th>
-                        <th scope="col">Trip From</th>
-                        <th scope="col">Trip To</th>
-                        <th scope="col">Trip Date</th>
-                        <th scope="col">Car Number</th>
-                        <th scope="col">Trip Total Spots</th>
-                        <th scope="col">Trip Charges Per Spot</th>
-                        <th scope="col">Route Details</th>
-                      </tr>
-                    </thead>
-                    <tbody id="tripTbody">
-                    </tbody>
-                </table>
-            </div>
-            </div>
-          </div>
+        
     </div>
 
     <script type='text/javascript'>

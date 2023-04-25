@@ -33,8 +33,6 @@ def signupReq(request):
         conn.commit()
     return HttpResponse("<h1>Request Successful</h1>")
 
-
-
 #function/API to login to the system based on the user email and password
 @csrf_exempt 
 def loginReq(request):
@@ -54,7 +52,7 @@ def loginReq(request):
         cur.execute("SELECT `user_id`, `user_email`, `user_pwd` FROM `user` WHERE `user_email` = '{}' AND `user_pwd` = '{}' ".format(admin_email,admin_pass))
         data = cur.fetchone()
         if data is not None:
-            print("DATA IS NOT NONEEEE")
+            
             print(data)
             loggedInUser = data[0]
             print("loggedInUser: ", loggedInUser)
@@ -63,29 +61,12 @@ def loginReq(request):
             if len(data) > 0:
                 #Fetch Data
                 loggedInUser_id = data[0]
-                #admin_db_email = data[1]
-                #print(admin_db_id)
-                #print(admin_db_email)
+                
                 #Session Create Code
                 request.session['user_id'] = loggedInUser_id
-                #request.session['admin_email'] = admin_db_email
-                #Session Create Code
-                #Cookie Code
-                #response = redirect(index)
-                """ response.set_cookie('admin_id', admin_db_id)
-                response.set_cookie('admin_email', admin_db_email)
-                return response """
+               
                 #Cookie Code
                 return HttpResponse("<h1>Login Successful</h1>")
-            else:
-                pass
-                #return render(request, 'login/signup.html')         
-        
-        #return render(request, 'login/signup.html')
-        
-       # return redirect(dashboard) 
-    #else:
-        #return render(request, 'login/signup.html')
 
 #view function to render login page
 @csrf_exempt
@@ -100,27 +81,48 @@ def signupView(request):
 
 #function/API to update user details
 @csrf_exempt
-def updateUserDetails(request):
-    body_unicode = request.body.decode('utf-8')
-    body = json.loads(body_unicode)
-    print("==========================")
-    print("received req: ", body)
-    print("==========================")
+def userDetails(request):
+    if request.method == "GET":
+        cur.execute("SELECT * FROM `user` WHERE user_id ='{}'".format(request.session['user_id']))
+        #request.session['user_id']
+        data = cur.fetchall()
+        dataArr = []
+        print("-------------------------")
+        print(data)
+        print("-------------------------")        
+        temp = {
+            'user_name': data[0][1],
+            'user_pwd': data[0][2],
+            'user_email': data[0][3],
+            'user_mob': data[0][4],
+            'u_id': data[0][0]
+        }
+        return JsonResponse(temp)
+    
     if request.method == "PUT":
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        print("==========================")
+        print("received req: ", body)
+        print("==========================")
+        print("request.session['user_id']: ", request.session['user_id'])
         if "user_name" in body:
-            cur.execute("UPDATE `user` SET user_name = '{}' WHERE user_id = '{}'".format(body['user_name'],1))
+            cur.execute("UPDATE `user` SET user_name = '{}' WHERE user_id = '{}'".format(body['user_name'],request.session['user_id']))
             conn.commit()
         if "user_pwd" in body:
-            cur.execute("UPDATE `user` SET user_pwd = '{}' WHERE user_id = '{}'".format(body['user_pwd'],1))
+            cur.execute("UPDATE `user` SET user_pwd = '{}' WHERE user_id = '{}'".format(body['user_pwd'],request.session['user_id']))
             conn.commit()
         if "user_email" in body:
-            cur.execute("UPDATE `user` SET user_email = '{}' WHERE user_id = '{}'".format(body['user_email'],1))
+            cur.execute("UPDATE `user` SET user_email = '{}' WHERE user_id = '{}'".format(body['user_email'],request.session['user_id']))
             conn.commit()
         if "user_mobile_no" in body:
-            cur.execute("UPDATE `user` SET user_mobile_no = '{}' WHERE user_id = '{}'".format(body['user_mobile_no'],1))
+            cur.execute("UPDATE `user` SET user_mobile_no = '{}' WHERE user_id = '{}'".format(body['user_mobile_no'],request.session['user_id']))
             conn.commit()
     return HttpResponse("<h1>Details Updated Successfully</h1>")
 
+@csrf_exempt
+def updateUserView(request):
+    return render(request,"home/updateProfile.html")
 #function/API to load homepage and available trips for the same day
 @csrf_exempt
 def home(request):
@@ -129,7 +131,8 @@ def home(request):
     import datetime   
     dt = datetime.datetime.now()
 
-    cur.execute("SELECT * FROM `trip_details` WHERE trip_date = '{}'".format(str(dt).split(" ")[0]))
+    #cur.execute("SELECT * FROM `trip_details` WHERE trip_date = '{}'".format(str(dt).split(" ")[0]))
+    cur.execute("SELECT * FROM `trip_details`")
     data = cur.fetchall()
     print("==========================")
     print("received response data: ", data)
@@ -226,7 +229,8 @@ def viewTrips(request):
         print("inside view trips")
         import datetime   
         dt = datetime.datetime.now()
-        cur.execute("SELECT trips.trip_id, trips.trip_charges_paid, trips.trip_status, trips.trip_details_id, trip_details.trip_from,trip_details.trip_to, trip_details.trip_date, trip_details.trip_car_number, trip_details.trip_route_details, trip_details.trip_time, trip_details.trip_driver_id FROM `trips` JOIN `trip_details` ON trips.trip_details_id = trip_details.trip_details_id WHERE trips.passenger_u_id = '{}' AND trip_details.trip_date = '{}'".format(request.session['user_id'],str(dt).split(" ")[0]))
+        #cur.execute("SELECT trips.trip_id, trips.trip_charges_paid, trips.trip_status, trips.trip_details_id, trip_details.trip_from,trip_details.trip_to, trip_details.trip_date, trip_details.trip_car_number, trip_details.trip_route_details, trip_details.trip_time, trip_details.trip_driver_id FROM `trips` JOIN `trip_details` ON trips.trip_details_id = trip_details.trip_details_id WHERE trips.passenger_u_id = '{}' AND trip_details.trip_date = '{}'".format(request.session['user_id'],str(dt).split(" ")[0]))
+        cur.execute("SELECT trips.trip_id, trips.trip_charges_paid, trips.trip_status, trips.trip_details_id, trip_details.trip_from,trip_details.trip_to, trip_details.trip_date, trip_details.trip_car_number, trip_details.trip_route_details, trip_details.trip_time, trip_details.trip_driver_id FROM `trips` JOIN `trip_details` ON trips.trip_details_id = trip_details.trip_details_id WHERE trips.passenger_u_id = '{}'".format(request.session['user_id']))
         data = cur.fetchall()
         print("data fetched: ", data)
         #[(3, 100, 'Booked', 1, 'Juhapura', 'CG Road', datetime.date(2023, 3, 5), 'GJ01RN5249', 'Through Paldi')]

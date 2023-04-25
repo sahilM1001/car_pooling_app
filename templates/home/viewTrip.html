@@ -25,6 +25,7 @@
                 <a class="nav-item nav-link" href="/carpooling/view/addTrip">Add a New Trip</a>
                 <a class="nav-item nav-link active" href="/carpooling/view/viewTrips">View Trips</a>
                 <a class="nav-item nav-link" href="/carpooling/view/myProfile">View profile</a>
+                <a class="nav-item nav-link" href="/carpooling/view/updateProfile">Update profile</a>
                 <a class="nav-item nav-link" href="/carpooling/api/logout">Logout</a>
               </div>
             </div>
@@ -89,8 +90,8 @@
             console.log("receivedData: ", receivedData)
             for (let i = 0; i < receivedData.length; i++){
                 let htmlObj = `
-                <div class="row">
-                <div class="col-lg-12 mt-4">
+                <div class="row d-flex justify-content-center">
+                <div class="col-lg-10 mt-4">
                     <div class="card">
     
                         <div class="card-body">

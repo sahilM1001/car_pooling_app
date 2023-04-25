@@ -12,7 +12,7 @@ urlpatterns = [
     path('api/cancelTrip', views.cancelTrip, name='Cancel Trip'),#done
     path('api/rateTrip', views.addRatings, name='Rate Trip'),#done
     path('api/viewRatings', views.viewRatings, name='View Ratings'),#done
-    path('api/updateDetails', views.updateUserDetails, name='Update User Details'),#done
+    path('api/userDetails', views.userDetails, name='Update User Details'),#done
     path('api/viewTrips', views.viewTrips, name='View Trips'),#done
     path('api/logout', views.logoutReq, name='Logout Trips'),#done
     path('api/myProfile', views.myProfile, name='My Profile'),#done
@@ -25,5 +25,6 @@ urlpatterns = [
     path('view/addTrip', views.addTripView, name='Add Trip View'),#done
     path('view/viewTrips', views.viewTripView, name='View Trips View'),#done
     path('view/myProfile', views.myProfileView, name='My Profile View'),#done
+    path('view/updateProfile', views.updateUserView, name='Update Profile View'),#done
 
 ]
